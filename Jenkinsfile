@@ -12,20 +12,10 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
+        stage('BUILDING THE CODE') {
             steps {
-                withSonarQubeEnv('SonarQube') {   // Jenkins -> Manage Jenkins -> Configure System -> SonarQube servers
-                    script {
-                        def scannerHome = tool 'SonarScannerCLI'   // Jenkins -> Manage Jenkins -> Tools -> SonarQube Scanner installations
-                        sh """
-                            ${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.projectKey=my-devops-app \
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=http://52.66.142.214:9000 \
-                            -Dsonar.login=squ_643d162ae309b24b5bdd55de630795e75f204a52
-                        """
-                    }
-                }
+                echo 'In this stage code will be built and mvn artifact will be generated'
+                sh 'mvn clean install'
             }
         }
 
