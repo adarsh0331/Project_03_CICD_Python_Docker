@@ -154,14 +154,14 @@ The Git repository should contain:
 If not already present, use the following example:
 
 <xaiArtifact artifact_id="21535d60-bfb1-4b24-9acd-1ed9b7297462" artifact_version_id="da19b331-4612-486e-b011-7a2d3a645144" title="Dockerfile" contentType="text/plain">
-
+```
 FROM python:3.9-slim
 WORKDIR /app
 COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 80
 CMD ["python", "app.py"]
-
+```
 </xaiArtifact>
 
 - Assumes `app.py` is the main application file and `requirements.txt` lists dependencies.
@@ -180,7 +180,7 @@ Create a new Pipeline job in Jenkins (e.g., `python-cicd`):
 Use the following Jenkinsfile:
 
 <xaiArtifact artifact_id="0d760215-39ec-4fc8-9e67-89cb285ff9b2" artifact_version_id="d06d10f6-3451-416e-8d0a-317919671a12" title="Jenkinsfile" contentType="text/groovy">
-
+```
 pipeline {
     agent any
     tools {
@@ -227,7 +227,7 @@ pipeline {
         }
     }
 }
-
+```
 </xaiArtifact>
 
 ### Pipeline Stages Explanation
