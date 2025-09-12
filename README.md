@@ -1,3 +1,7 @@
+## Architecture Diagram
+
+Below is the CI/CD architecture diagram illustrating the flow from code commit to deployment:
+
 <img width="940" height="382" alt="image" src="https://github.com/user-attachments/assets/3834b541-9b00-44f1-8af5-48947c2859e5" />
 # CI/CD Pipeline for Python Application Deployment on AWS
 
@@ -10,25 +14,6 @@ The architecture leverages AWS infrastructure, Jenkins for orchestration, Docker
 ## Architecture Diagram
 
 Below is the CI/CD architecture diagram illustrating the flow from code commit to deployment:
-
-<xaiArtifact artifact_id="ad4dd234-0fac-4fc1-ba6f-ee8c0107510f" artifact_version_id="40fff6ab-8fb3-4814-8e51-2fee53d6006e" title="cicd_architecture_diagram.md" contentType="text/markdown">
-
-```mermaid
-graph TD
-    A[Developer] -->|Commits Code| B(Git Repository<br><img src='https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png' width='30' height='30'>)
-    B -->|Webhook Trigger| C(Jenkins<br><img src='https://www.jenkins.io/images/logos/jenkins/256.png' width='30' height='30'>)
-    C -->|Code Checkout| D[EC2 Instance<br>t2.micro<br><img src='https://d1.awsstatic.com/logos/aws-logo-lockups/Arch_AWS-EC2_48.e5b62d0e0e0c4b7e8e0c0e8e0e8e0e8e0e8e0e8e.png' width='30' height='30'>]
-    D -->|Pipeline Execution| E[Maven Build<br><img src='https://maven.apache.org/images/maven-logo-black-on-white.png' width='60' height='30'>]
-    E -->|Compile & Package| F[Test Stage<br>(Optional)]
-    F -->|Docker Build| G[Docker<br><img src='https://www.docker.com/wp-content/uploads/2022/03/vertical-logo-monochromatic.png' width='30' height='30'>]
-    G -->|Docker Run| H[Running Container<br>Port 80]
-    H -->|HTTP Access| I[Public IP<br>Application Accessible]
-    D -->|Jenkins UI<br>Port 8080| J[Admin Access]
-    K[Security Group<br>Ports: 22, 80, 8080] --> D
-    L[Default VPC<br>Public Subnet] --> D
-```
-
-</xaiArtifact>
 
 ### Diagram Explanation
 - **Developer**: Commits Python application code and Dockerfile to a Git repository (GitHub/GitLab).
