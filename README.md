@@ -2,7 +2,8 @@
 
 Below is the CI/CD architecture diagram illustrating the flow from code commit to deployment:
 
-<img width="940" height="382" alt="image" src="https://github.com/user-attachments/assets/3834b541-9b00-44f1-8af5-48947c2859e5" />
+<img width="1788" height="660" alt="image" src="https://github.com/user-attachments/assets/3e12d44b-e133-4219-b6f9-d2a309af34cc" />
+
 
 # CI/CD Pipeline for Python Application Deployment on AWS
 
