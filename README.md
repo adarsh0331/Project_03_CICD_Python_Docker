@@ -13,17 +13,11 @@ This repository outlines a Continuous Integration and Continuous Deployment (CI/
 
 The architecture leverages AWS infrastructure, Jenkins for orchestration, Docker for containerization, and Maven for build automation, ensuring a streamlined deployment process.
 
-## Architecture Diagram
-
-Below is the CI/CD architecture diagram illustrating the flow from code commit to deployment:
-
 ### Diagram Explanation
 - **Developer**: Commits Python application code and Dockerfile to a Git repository (GitHub/GitLab).
 - **Git Repository**: Hosts the source code and triggers Jenkins via a webhook on code push.
 - **Jenkins**: Installed on an EC2 instance, orchestrates the pipeline with stages for checkout, build, test, and deployment.
 - **EC2 Instance**: A t2.micro instance in a default VPC’s public subnet, hosting Jenkins, Docker, and the application container.
-- **Maven Build**: Compiles and packages the Python code (assuming Maven is used for build automation).
-- **Test Stage**: Runs unit tests (optional, based on project setup).
 - **Docker Build**: Builds a Docker image from the Dockerfile.
 - **Docker Run**: Deploys the container on the EC2 instance, exposing the application on port 80.
 - **Security Group**: Allows SSH (22), HTTP (80), and Jenkins (8080) traffic.
@@ -94,15 +88,6 @@ sudo usermod -a -G docker jenkins
 - Log out and back in as `ec2-user` to apply group changes.
 - Verify: `docker --version`.
 
-### Install Maven
-Install Maven for build automation:
-
-```
-sudo yum install -y maven
-```
-
-- Verify: `mvn --version`.
-
 ### Install Git
 Ensure Git is installed:
 
@@ -120,14 +105,7 @@ sudo yum install -y git
      - **Git Plugin**: For repository integration
      - **Pipeline: Stage View**: Visualize pipeline stages
      - **Docker Pipeline**: For Docker build/run steps
-     - **Maven Integration** (optional): For Maven-specific tasks
-
-2. **Configure Maven**:
-   - Go to **Manage Jenkins > Tools > Maven**.
-   - Add:
-     - **Name**: `Maven`
-     - **Install automatically**: Check or specify path if installed manually.
-   - Save.
+   
 
 3. **Configure Git Repository**:
    - Ensure Jenkins has access to your GitHub/GitLab repository.
@@ -136,25 +114,17 @@ sudo yum install -y git
      - **ID**: `git-credentials` (or any identifier)
      - **Username/Password**: Your GitHub/GitLab credentials
 
-4. **Set Up Webhook**:
-   - In GitHub/GitLab, configure a webhook to trigger Jenkins builds:
-     - **URL**: `http://<EC2-Public-IP>:8080/github-webhook/`
-     - **Events**: Push events
-   - Ensure Jenkins has the GitHub/GitLab plugin and webhook support enabled.
-
 ## Application Structure
 
 The Git repository should contain:
 
 - **Python Application**: Core application code (e.g., Flask or FastAPI).
-- **pom.xml**: Maven configuration for build automation (if used for Python dependency management or scripts).
 - **Dockerfile**: Defines the Python runtime environment.
-- **Tests** (optional): Unit tests in a `tests/` directory.
+
 
 ### Sample Dockerfile
 If not already present, use the following example:
 ```
-<xaiArtifact artifact_id="21535d60-bfb1-4b24-9acd-1ed9b7297462" artifact_version_id="da19b331-4612-486e-b011-7a2d3a645144" title="Dockerfile" contentType="text/plain">
 
 FROM python:3.9-slim
 WORKDIR /app
@@ -163,7 +133,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 80
 CMD ["python", "app.py"]
 
-</xaiArtifact>
 ```
 - Assumes `app.py` is the main application file and `requirements.txt` lists dependencies.
 - Update `CMD` and `EXPOSE` based on your application.
@@ -181,13 +150,10 @@ Create a new Pipeline job in Jenkins (e.g., `python-cicd`):
 Use the following Jenkinsfile:
 
 ```
-<xaiArtifact artifact_id="0d760215-39ec-4fc8-9e67-89cb285ff9b2" artifact_version_id="d06d10f6-3451-416e-8d0a-317919671a12" title="Jenkinsfile" contentType="text/groovy">
 
 pipeline {
     agent any
-    tools {
-        maven 'Maven'
-    }
+   
     stages {
         stage('Code Checkout') {
             steps {
@@ -195,18 +161,7 @@ pipeline {
                 echo 'Checked out code from Git'
             }
         }
-        stage('Build') {
-            steps {
-                echo 'Building with Maven'
-                sh 'mvn clean package'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Running unit tests'
-                sh 'mvn test' // Adjust for Python tests (e.g., pytest)
-            }
-        }
+       
         stage('Docker Build') {
             steps {
                 echo 'Building Docker image'
@@ -230,17 +185,14 @@ pipeline {
     }
 }
 
-</xaiArtifact>
 ```
 
 ### Pipeline Stages Explanation
 | Stage            | Description                                                                 |
 |------------------|-----------------------------------------------------------------------------|
-| Code Checkout   | Pulls code from the Git repository using provided credentials.              |
-| Build           | Runs `mvn clean package` to compile and package the application.            |
-| Test            | Executes unit tests (modify for Python, e.g., `pytest` if applicable).      |
-| Docker Build    | Builds a Docker image tagged with the Jenkins build number.                 |
-| Docker Run      | Stops/Removes any existing container and runs a new one on port 80.         |
+| Code Checkout    | Pulls code from the Git repository using provided credentials.               |
+| Docker Build     | Builds a Docker image tagged with the Jenkins build number.                  |
+| Docker Run       | Stops/Removes any existing container and runs a new one on port 80.          |
 
 ## Accessing the Application
 
@@ -252,7 +204,6 @@ pipeline {
 
 - **Jenkins UI inaccessible**: Verify security group allows port 8080; check `sudo systemctl status jenkins`.
 - **Docker issues**: Ensure `jenkins` user is in `docker` group; restart Jenkins.
-- **Maven errors**: Confirm Maven is installed and `JAVA_HOME` is set to Java 17.
 - **Git issues**: Validate repository URL and credentials; test webhook connectivity.
 - **Application not running**: Check Docker container logs: `docker logs python-app`.
 - **Port conflicts**: Ensure no other service uses port 80 or 8080.
@@ -266,5 +217,3 @@ pipeline {
 - Add notifications for pipeline failures (e.g., email, Slack).
 
 For issues, check Jenkins logs (`/var/log/jenkins/jenkins.log`) or open a GitHub/GitLab issue.
-
-<xaiArtifact artifact_id="7ee50389-e9a0-497e-84f4-457d759050af" artifact_version_id="62b97240-8a4d-492e-a1e1-ffbb4d43e070" title="README.md" contentType="text/markdown">
